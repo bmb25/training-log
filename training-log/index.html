@@ -15,26 +15,30 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
 
 :root {
-  --bg: #0e1117;
-  --surface: #161b27;
-  --surface2: #1e2535;
-  --surface3: #252d3f;
-  --border: #2a3348;
-  --accent: #4f9eff;
-  --accent2: #2ecc9a;
-  --accent3: #f5a623;
-  --danger: #e05252;
-  --text: #e8eaf0;
-  --text2: #8892a4;
-  --text3: #535e72;
-  --rowing-color: #4f9eff;
-  --weights-color: #2ecc9a;
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface2: #f0f3f7;
+  --surface3: #e4e9f0;
+  --border: #dde3ec;
+  --border2: #c8d1de;
+  --accent: #c8102e;
+  --accent-hover: #a50d26;
+  --accent2: #5b9bd5;
+  --accent3: #e8a020;
+  --danger: #c8102e;
+  --text: #1a2235;
+  --text2: #4a5568;
+  --text3: #8a97aa;
+  --rowing-color: #c8102e;
+  --weights-color: #5b9bd5;
   --font-main: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
   --radius: 10px;
   --radius-lg: 16px;
   --sidebar-w: 220px;
   --bottom-nav-h: 60px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -66,11 +70,22 @@ body {
   height: 100vh;
   overflow-y: auto;
   z-index: 50;
+  box-shadow: var(--shadow-sm);
 }
 
-.logo { padding: 0 20px 28px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
 .logo-title { font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
 .logo-sub { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: var(--font-mono); }
+
+/* WRC blade accent stripe under logo */
+.logo::after {
+  content: '';
+  display: block;
+  margin-top: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--accent) 70%, var(--accent2) 100%);
+}
 
 .nav-section { padding: 0 12px; margin-bottom: 8px; }
 .nav-label { font-size: 10px; font-weight: 500; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; padding: 0 8px; margin-bottom: 4px; }
@@ -82,7 +97,7 @@ body {
   text-align: left; transition: all 0.15s;
 }
 .nav-btn:hover { background: var(--surface2); color: var(--text); }
-.nav-btn.active { background: var(--surface3); color: var(--text); }
+.nav-btn.active { background: #fdf0f2; color: var(--accent); font-weight: 500; }
 .nav-btn .nav-icon { width: 16px; text-align: center; font-size: 14px; flex-shrink: 0; }
 
 /* Sync status in sidebar */
@@ -104,7 +119,7 @@ body {
   background: var(--text3); flex-shrink: 0;
   transition: background 0.3s;
 }
-.sync-dot.synced { background: var(--accent2); }
+.sync-dot.synced { background: #22a66a; }
 .sync-dot.syncing { background: var(--accent3); animation: pulse 1s infinite; }
 .sync-dot.error { background: var(--danger); }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
@@ -127,6 +142,7 @@ body {
   z-index: 100;
   padding: 0 4px;
   padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
 }
 .bottom-nav-inner {
   display: flex;
@@ -165,9 +181,10 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
 }
 .card-title {
-  font-size: 12px; font-weight: 500; color: var(--text3);
+  font-size: 11px; font-weight: 500; color: var(--text3);
   text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px;
 }
 
@@ -201,34 +218,34 @@ select option { background: var(--surface2); }
   font-family: var(--font-main); font-size: 14px; font-weight: 500;
   cursor: pointer; transition: all 0.15s; touch-action: manipulation;
 }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: #3a8ee8; }
-.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-.btn-secondary:hover { background: var(--surface3); }
+.btn-primary { background: var(--accent); color: #fff; box-shadow: 0 1px 3px rgba(200,16,46,0.3); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+.btn-secondary:hover { background: var(--surface2); }
 .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--border); }
-.btn-danger:hover { background: rgba(224,82,82,0.1); }
+.btn-danger:hover { background: #fdf0f2; }
 .btn-sm { padding: 6px 14px; font-size: 12px; }
 .btn-block { width: 100%; justify-content: center; margin-bottom: 10px; }
 
 /* ── TABS ── */
-.tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 20px; }
+.tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 20px; border: 1px solid var(--border); }
 .tab {
   flex: 1; padding: 9px 12px; border-radius: 7px; border: none;
   background: none; color: var(--text2); font-family: var(--font-main);
   font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: center;
 }
-.tab.active { background: var(--surface); color: var(--text); }
+.tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
 
 /* ── SESSION TYPE TOGGLE ── */
 .type-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
 .type-btn {
   flex: 1; padding: 14px; border-radius: var(--radius);
-  border: 2px solid var(--border); background: none; color: var(--text2);
+  border: 2px solid var(--border); background: var(--surface2); color: var(--text2);
   font-family: var(--font-main); font-size: 14px; font-weight: 500;
   cursor: pointer; transition: all 0.2s; text-align: center;
 }
-.type-btn.rowing.active { border-color: var(--rowing-color); color: var(--rowing-color); background: rgba(79,158,255,0.08); }
-.type-btn.weights.active { border-color: var(--weights-color); color: var(--weights-color); background: rgba(46,204,154,0.08); }
+.type-btn.rowing.active { border-color: var(--accent); color: var(--accent); background: #fdf0f2; }
+.type-btn.weights.active { border-color: var(--accent2); color: #2a6fa8; background: #eef5fb; }
 
 .session-fields { display: none; }
 .session-fields.visible { display: block; }
@@ -237,28 +254,29 @@ select option { background: var(--surface2); }
 .exercise-row { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; }
 .exercise-row-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .exercise-name-input { flex: 1; }
-.set-row { display: grid; grid-template-columns: 32px 1fr 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+.set-row { display: grid; grid-template-columns: 28px 1fr 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
 .set-label { font-size: 11px; color: var(--text3); text-align: center; font-family: var(--font-mono); }
 
 /* ── ENTRY CARDS ── */
 .entry-card {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-lg); padding: 16px 20px;
-  margin-bottom: 12px; transition: border-color 0.15s; cursor: pointer;
+  margin-bottom: 12px; transition: all 0.15s; cursor: pointer;
+  box-shadow: var(--shadow-sm);
 }
-.entry-card:hover { border-color: var(--text3); }
+.entry-card:hover { border-color: var(--border2); box-shadow: var(--shadow-md); transform: translateY(-1px); }
 .entry-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .entry-type-badge {
   font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
   text-transform: uppercase; padding: 3px 9px; border-radius: 20px; font-family: var(--font-mono);
 }
-.badge-rowing { background: rgba(79,158,255,0.15); color: var(--rowing-color); }
-.badge-weights { background: rgba(46,204,154,0.15); color: var(--weights-color); }
+.badge-rowing { background: #fdf0f2; color: var(--accent); border: 1px solid rgba(200,16,46,0.2); }
+.badge-weights { background: #eef5fb; color: #2a6fa8; border: 1px solid rgba(91,155,213,0.3); }
 .entry-date { font-size: 12px; color: var(--text3); font-family: var(--font-mono); }
 .entry-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
 .entry-stats { display: flex; gap: 16px; flex-wrap: wrap; }
 .entry-stat { font-size: 12px; color: var(--text2); font-family: var(--font-mono); }
-.entry-stat span { color: var(--text); font-weight: 500; }
+.entry-stat span { color: var(--accent); font-weight: 500; }
 .entry-notes { font-size: 12px; color: var(--text2); margin-top: 8px; font-style: italic; border-top: 1px solid var(--border); padding-top: 8px; }
 
 /* ── CHART ── */
@@ -273,15 +291,16 @@ select option { background: var(--surface2); }
   border: 1px solid var(--border); margin: 0 auto;
   display: flex; align-items: center; justify-content: center;
   font-size: 10px; color: var(--text3); font-family: var(--font-mono);
+  background: var(--surface);
 }
-.week-day-dot.rowing { background: rgba(79,158,255,0.2); border-color: var(--rowing-color); color: var(--rowing-color); }
-.week-day-dot.weights { background: rgba(46,204,154,0.2); border-color: var(--weights-color); color: var(--weights-color); }
-.week-day-dot.both { background: rgba(245,166,35,0.2); border-color: var(--accent3); color: var(--accent3); }
+.week-day-dot.rowing { background: #fdf0f2; border-color: var(--accent); color: var(--accent); }
+.week-day-dot.weights { background: #eef5fb; border-color: var(--accent2); color: #2a6fa8; }
+.week-day-dot.both { background: #fef8ec; border-color: var(--accent3); color: #9a6a00; }
 
 /* ── MODAL ── */
 .modal-overlay {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.75); z-index: 200;
+  background: rgba(26,34,53,0.5); z-index: 200;
   align-items: flex-end; justify-content: center;
   padding: 0;
 }
@@ -291,6 +310,7 @@ select option { background: var(--surface2); }
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   padding: 24px; width: 100%; max-height: 88vh; overflow-y: auto;
   padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
 }
 .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -314,28 +334,29 @@ select option { background: var(--surface2); }
 
 .import-preview { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-top: 20px; }
 .parsed-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.parsed-field { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.parsed-field { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; box-shadow: var(--shadow-sm); }
 .parsed-field-label { font-size: 11px; color: var(--text3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
 .parsed-field-val { font-size: 14px; color: var(--text); font-family: var(--font-mono); font-weight: 500; }
 
 .import-status { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
-.import-status.success { background: rgba(46,204,154,0.1); color: var(--accent2); border: 1px solid rgba(46,204,154,0.2); }
-.import-status.error { background: rgba(224,82,82,0.1); color: var(--danger); border: 1px solid rgba(224,82,82,0.2); }
+.import-status.success { background: #edfaf4; color: #1a7a4a; border: 1px solid rgba(34,166,106,0.25); }
+.import-status.error { background: #fdf0f2; color: var(--danger); border: 1px solid rgba(200,16,46,0.2); }
 
 .guide-step { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .guide-step:last-child { border-bottom: none; }
-.guide-step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--surface3); color: var(--text2); font-size: 11px; font-family: var(--font-mono); font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.guide-step-num { width: 22px; height: 22px; border-radius: 50%; background: #fdf0f2; color: var(--accent); font-size: 11px; font-family: var(--font-mono); font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; border: 1px solid rgba(200,16,46,0.2); }
 .guide-step-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
 .guide-step-text strong { color: var(--text); font-weight: 500; }
-.guide-step-text code { font-family: var(--font-mono); font-size: 12px; background: var(--surface3); padding: 1px 6px; border-radius: 4px; color: var(--accent); }
+.guide-step-text code { font-family: var(--font-mono); font-size: 12px; background: var(--surface2); padding: 1px 6px; border-radius: 4px; color: var(--accent); border: 1px solid var(--border); }
 
 /* ── COMPARE ── */
 .compare-table { width: 100%; border-collapse: collapse; }
-.compare-table th { font-size: 11px; color: var(--text3); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); font-weight: 500; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; }
+.compare-table th { font-size: 11px; color: var(--text3); text-align: left; padding: 8px 12px; border-bottom: 2px solid var(--border); font-weight: 500; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; }
 .compare-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text2); font-family: var(--font-mono); }
 .compare-table td:first-child { color: var(--text); }
 .compare-table tr:last-child td { border-bottom: none; }
-.better { color: var(--accent2) !important; }
+.compare-table tr:nth-child(even) { background: var(--surface2); }
+.better { color: #1a7a4a !important; font-weight: 500; }
 .worse { color: var(--danger) !important; }
 
 /* ── UTILS ── */
@@ -343,22 +364,36 @@ select option { background: var(--surface2); }
 .mt-20 { margin-top: 20px; }
 .gap-10 { display: flex; gap: 10px; }
 .flex-end { justify-content: flex-end; }
-.section-title { font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono); }
-.empty-state { text-align: center; padding: 48px 24px; color: var(--text3); }
-.empty-icon { font-size: 36px; margin-bottom: 12px; }
+.section-title { font-size: 11px; font-weight: 500; color: var(--text3); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--font-mono); }
+.exercise-picker { position: relative; display: inline-block; }
+.exercise-picker-dropdown {
+  position: absolute; bottom: calc(100% + 6px); left: 0;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); min-width: 260px; max-height: 280px;
+  overflow-y: auto; z-index: 50; box-shadow: var(--shadow-md);
+}
+.exercise-picker-dropdown.hidden { display: none; }
+.picker-section-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; padding: 10px 14px 4px; font-family: var(--font-mono); }
+.picker-item { padding: 9px 14px; font-size: 13px; color: var(--text2); cursor: pointer; transition: background 0.1s; border-bottom: 1px solid var(--border); }
+.picker-item:last-child { border-bottom: none; }
+.picker-item:hover { background: #fdf0f2; color: var(--accent); }
+.picker-custom-input { padding: 8px 14px; border-top: 1px solid var(--border); background: var(--surface2); }
+.picker-custom-input input { font-size: 13px; padding: 7px 10px; }
+.contrast-badge { display: inline-block; font-size: 9px; font-family: var(--font-mono); font-weight: 500; padding: 1px 6px; border-radius: 10px; background: #fef8ec; color: #9a6a00; border: 1px solid rgba(232,160,32,0.3); margin-left: 6px; vertical-align: middle; letter-spacing: 0.04em; }
 
 /* ── SEARCH / FILTER ── */
 .search-bar { position: relative; margin-bottom: 14px; }
 .search-bar input { padding-left: 36px; }
 .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; pointer-events: none; }
 .filter-pills { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-.pill { padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: none; color: var(--text2); font-size: 12px; cursor: pointer; font-family: var(--font-main); transition: all 0.15s; }
-.pill.active { background: var(--surface3); color: var(--text); border-color: var(--text3); }
+.pill { padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); font-size: 12px; cursor: pointer; font-family: var(--font-main); transition: all 0.15s; box-shadow: var(--shadow-sm); }
+.pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pill:hover:not(.active) { border-color: var(--border2); background: var(--surface2); }
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
@@ -460,8 +495,8 @@ select option { background: var(--surface2); }
         <div class="card-title">This week</div>
         <div class="week-grid" id="week-grid"></div>
         <div style="display:flex;gap:16px;font-size:11px;color:var(--text3);font-family:var(--font-mono);">
-          <span style="color:var(--rowing-color)">■</span> Rowing &nbsp;
-          <span style="color:var(--weights-color)">■</span> Weights &nbsp;
+          <span style="color:var(--accent)">■</span> Rowing &nbsp;
+          <span style="color:var(--accent2)">■</span> Weights &nbsp;
           <span style="color:var(--accent3)">■</span> Both
         </div>
       </div>
@@ -514,13 +549,23 @@ select option { background: var(--surface2); }
         <!-- WEIGHTS -->
         <div class="session-fields" id="weights-fields">
           <div class="section-title">Weights details</div>
-          <div class="form-group" style="margin-bottom:16px;">
-            <label>Session type</label>
-            <select id="f-wt-type"><option>Session A (strength)</option><option>Session B (power / contrast)</option><option>Other</option></select>
+          <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap;">
+            <div class="form-group" style="flex:1;min-width:180px;">
+              <label>Session type</label>
+              <select id="f-wt-type" onchange="autoPopulateExercises()">
+                <option>Session A (strength)</option>
+                <option>Session B (power / contrast)</option>
+                <option>Wednesday club (moderate)</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="autoPopulateExercises()" style="white-space:nowrap;margin-bottom:1px;">↺ Auto-fill exercises</button>
           </div>
           <div class="section-title">Exercises</div>
           <div id="exercise-list"></div>
-          <button class="btn btn-secondary btn-sm" onclick="addExercise()" style="margin-top:4px;">+ Add exercise</button>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="addExerciseWithPicker()">+ Add exercise</button>
+          </div>
         </div>
 
         <div class="form-group full mt-20">
@@ -824,17 +869,141 @@ function setType(type) {
   document.getElementById('type-weights').classList.toggle('active', type === 'weights');
   document.getElementById('rowing-fields').classList.toggle('visible', type === 'rowing');
   document.getElementById('weights-fields').classList.toggle('visible', type === 'weights');
-  if (type === 'weights' && document.getElementById('exercise-list').children.length === 0) addExercise();
+  if (type === 'weights' && document.getElementById('exercise-list').children.length === 0) {
+    autoPopulateExercises();
+  }
 }
 
-function addExercise() {
+// ── EXERCISE LIBRARY ─────────────────────────────────────────────────────────
+const SESSION_EXERCISES = {
+  'Session A (strength)': [
+    { name: 'Trap bar deadlift', note: '3s eccentric. Primary force-production exercise.' },
+    { name: 'Bench row (chest-supported)', note: 'Full retraction. Controls the catch position.' },
+    { name: 'Goblet squat', note: '2s pause at bottom. Upright torso.' },
+    { name: 'Weighted pull-up / lat pulldown', note: 'Full hang, drive elbows down.' },
+    { name: 'Pallof press', note: 'Anti-rotation core. Non-negotiable.' },
+    { name: 'Romanian deadlift', note: 'Hamstring load, injury prevention.' },
+  ],
+  'Session B (power / contrast)': [
+    { name: 'Hang clean / KB swing', note: 'PAP stimulus — maximum explosive intent.', contrast: true },
+    { name: 'Box jump', note: 'Immediately after hang clean. No rest between.', contrast: true },
+    { name: 'Single-leg press', note: '2s eccentric, explosive concentric.' },
+    { name: 'Cable seated row (explosive)', note: 'Fast pull. Mimics race-pace arm draw.' },
+    { name: 'Farmer\'s carry', note: 'Grip and trunk stability.' },
+    { name: 'Dead bug', note: 'Deep core — force transfer system.' },
+  ],
+  'Wednesday club (moderate)': [
+    { name: 'KB swing / hang clean (light)', note: 'Keep explosive intent, light load.' },
+    { name: 'Bench row (chest-supported)', note: 'Moderate load.' },
+    { name: 'Single-leg press', note: '3×10 each side.' },
+    { name: 'Dead bug', note: '3×10 each side.' },
+    { name: 'Pallof press', note: '2×10 each side.' },
+  ],
+};
+
+const ALL_EXERCISES = [
+  'Trap bar deadlift', 'Bench row (chest-supported)', 'Goblet squat',
+  'Weighted pull-up / lat pulldown', 'Pallof press', 'Romanian deadlift',
+  'Hang clean / KB swing', 'Box jump', 'Single-leg press',
+  'Cable seated row (explosive)', 'Farmer\'s carry', 'Dead bug',
+  'KB swing / hang clean (light)', 'Barbell row',
+];
+
+function autoPopulateExercises() {
+  const sessionType = document.getElementById('f-wt-type').value;
+  const exercises = SESSION_EXERCISES[sessionType];
+  if (!exercises) return;
+  // Clear existing
+  exerciseCount = 0; setCounters = {};
+  document.getElementById('exercise-list').innerHTML = '';
+  // Add each exercise from the session template
+  exercises.forEach(ex => addExercise(ex.name, ex.note, ex.contrast));
+}
+
+function addExerciseWithPicker() {
+  // Show a picker dropdown then add the chosen exercise
+  const existing = document.getElementById('exercise-picker-popup');
+  if (existing) { existing.remove(); return; }
+
+  // Build previously used exercise names from session history
+  const usedNames = [...new Set(
+    sessions.filter(s => s.type === 'weights' && s.exercises)
+      .flatMap(s => s.exercises.map(e => e.name))
+  )].filter(n => !ALL_EXERCISES.includes(n));
+
+  let html = `<div class="exercise-picker-dropdown" id="exercise-picker-popup">`;
+
+  // Session-specific exercises based on current selection
+  const sessionType = document.getElementById('f-wt-type').value;
+  const sessionExs = SESSION_EXERCISES[sessionType];
+  if (sessionExs) {
+    html += `<div class="picker-section-label">${sessionType.split('(')[0].trim()}</div>`;
+    sessionExs.forEach(ex => {
+      html += `<div class="picker-item" onclick="addExercise('${ex.name.replace(/'/g,"\\'")}','${(ex.note||'').replace(/'/g,"\\'")}',${ex.contrast||false});closePicker()">
+        ${ex.name}${ex.contrast ? '<span class="contrast-badge">PAP</span>' : ''}
+      </div>`;
+    });
+  }
+
+  // All exercises not already in current session
+  const currentNames = Array.from(document.querySelectorAll('.exercise-name-input')).map(el => el.value);
+  const otherExs = ALL_EXERCISES.filter(n => !sessionExs?.find(e => e.name === n) && !currentNames.includes(n));
+  if (otherExs.length) {
+    html += `<div class="picker-section-label">All exercises</div>`;
+    otherExs.forEach(n => {
+      html += `<div class="picker-item" onclick="addExercise('${n.replace(/'/g,"\\'")}');closePicker()">${n}</div>`;
+    });
+  }
+
+  // Previously used custom exercises
+  if (usedNames.length) {
+    html += `<div class="picker-section-label">Previously used</div>`;
+    usedNames.forEach(n => {
+      html += `<div class="picker-item" onclick="addExercise('${n.replace(/'/g,"\\'")}');closePicker()">${n}</div>`;
+    });
+  }
+
+  // Custom entry
+  html += `<div class="picker-custom-input">
+    <input type="text" id="picker-custom" placeholder="Type custom exercise name..." onkeydown="if(event.key==='Enter'){addExercise(this.value);closePicker();}">
+  </div></div>`;
+
+  // Insert after the add button
+  const btn = document.querySelector('[onclick="addExerciseWithPicker()"]');
+  btn.insertAdjacentHTML('afterend', html);
+  document.getElementById('picker-custom').focus();
+
+  // Close on outside click
+  setTimeout(() => {
+    document.addEventListener('click', function handler(e) {
+      if (!document.getElementById('exercise-picker-popup')?.contains(e.target) && !btn.contains(e.target)) {
+        closePicker();
+        document.removeEventListener('click', handler);
+      }
+    });
+  }, 100);
+}
+
+function closePicker() {
+  document.getElementById('exercise-picker-popup')?.remove();
+}
+
+function addExercise(name = '', note = '', isContrast = false) {
   exerciseCount++;
   const i = exerciseCount;
   const div = document.createElement('div');
   div.className = 'exercise-row'; div.id = 'ex-' + i;
+  const contrastBadge = isContrast ? '<span class="contrast-badge">PAP contrast</span>' : '';
   div.innerHTML = `
     <div class="exercise-row-header">
-      <input class="exercise-name-input" type="text" placeholder="Exercise name" id="ex-name-${i}">
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:500;color:var(--text)">${name || 'Exercise'}</span>
+          ${contrastBadge}
+          <button class="btn btn-secondary btn-sm" onclick="renameExercise(${i})" style="padding:2px 8px;font-size:11px;">rename</button>
+        </div>
+        <input type="hidden" id="ex-name-${i}" value="${name}">
+      </div>
       <button class="btn btn-danger btn-sm" onclick="document.getElementById('ex-${i}').remove()">✕</button>
     </div>
     <div style="display:grid;grid-template-columns:28px 1fr 1fr 1fr auto;gap:8px;margin-bottom:6px;">
@@ -845,10 +1014,23 @@ function addExercise() {
     <button class="btn btn-secondary btn-sm" onclick="addSet(${i})" style="margin-top:4px;">+ Set</button>
     <div class="form-group" style="margin-top:10px;">
       <label>Technique notes</label>
-      <input type="text" id="ex-note-${i}" placeholder="Observations for this exercise">
+      <input type="text" id="ex-note-${i}" placeholder="${note || 'Observations for this exercise'}" value="">
     </div>`;
   document.getElementById('exercise-list').appendChild(div);
   addSet(i);
+}
+
+function renameExercise(i) {
+  const hidden = document.getElementById('ex-name-' + i);
+  const current = hidden.value;
+  const newName = prompt('Rename exercise:', current);
+  if (newName && newName.trim()) {
+    hidden.value = newName.trim();
+    // Update the display label
+    const row = document.getElementById('ex-' + i);
+    const label = row.querySelector('span[style*="font-weight:500"]');
+    if (label) label.textContent = newName.trim();
+  }
 }
 
 function addSet(exId) {
@@ -961,7 +1143,7 @@ function renderMiniSplitChart(rows) {
   const ctx = document.getElementById('chart-split-dash');
   if (!ctx) return;
   if (charts['split-dash']) charts['split-dash'].destroy();
-  charts['split-dash'] = new Chart(ctx, lineChart(rows.map(s => formatDateShort(s.date)), rows.map(s => splitToSeconds(s.split)), 'Split', '#4f9eff', true));
+  charts['split-dash'] = new Chart(ctx, lineChart(rows.map(s => formatDateShort(s.date)), rows.map(s => splitToSeconds(s.split)), 'Split', '#c8102e', true));
 }
 
 // ── HISTORY ──────────────────────────────────────────────────────────────────
@@ -1047,11 +1229,11 @@ function showProgTab(id) {
 
 function renderProgression() {
   const rowing = sessions.filter(s => s.type==='rowing' && s.split).reverse();
-  renderLineChart('chart-split', rowing.map(s=>formatDateShort(s.date)), rowing.map(s=>splitToSeconds(s.split)), 'Split (sec)', '#4f9eff', true);
+  renderLineChart('chart-split', rowing.map(s=>formatDateShort(s.date)), rowing.map(s=>splitToSeconds(s.split)), 'Split (sec)', '#c8102e', true);
   const withHr = rowing.filter(s=>s.hrAvg);
-  renderLineChart('chart-hr', withHr.map(s=>formatDateShort(s.date)), withHr.map(s=>s.hrAvg), 'Avg HR (bpm)', '#e05252');
+  renderLineChart('chart-hr', withHr.map(s=>formatDateShort(s.date)), withHr.map(s=>s.hrAvg), 'Avg HR (bpm)', '#5b9bd5');
   const withRate = rowing.filter(s=>s.rate);
-  renderLineChart('chart-rate', withRate.map(s=>formatDateShort(s.date)), withRate.map(s=>s.rate), 'Stroke rate (spm)', '#f5a623');
+  renderLineChart('chart-rate', withRate.map(s=>formatDateShort(s.date)), withRate.map(s=>s.rate), 'Stroke rate (spm)', '#e8a020');
 }
 
 function populateExerciseSelect() {
@@ -1067,7 +1249,7 @@ function renderWeightsProg() {
     if (!ex||!ex.sets.length) return null;
     return { date: s.date, weight: Math.max(...ex.sets.map(set=>set.weight)) };
   }).filter(Boolean).reverse();
-  renderLineChart('chart-weights', data.map(d=>formatDateShort(d.date)), data.map(d=>d.weight), `${name} — max (kg)`, '#2ecc9a');
+  renderLineChart('chart-weights', data.map(d=>formatDateShort(d.date)), data.map(d=>d.weight), `${name} — max (kg)`, '#5b9bd5');
 }
 
 function renderLoadChart() {
@@ -1079,7 +1261,7 @@ function renderLoadChart() {
     weeks[key] = (weeks[key]||0) + 1;
   });
   const sorted = Object.keys(weeks).sort();
-  renderBarChart('chart-load', sorted.map(formatDateShort), sorted.map(k=>weeks[k]), 'Sessions', '#4f9eff');
+  renderBarChart('chart-load', sorted.map(formatDateShort), sorted.map(k=>weeks[k]), 'Sessions', '#c8102e');
 }
 
 // ── COMPARE ───────────────────────────────────────────────────────────────────
@@ -1259,8 +1441,8 @@ const chartDefaults = {
   responsive: true, maintainAspectRatio: false,
   plugins: { legend: { display: false } },
   scales: {
-    x: { ticks: { color:'#535e72', font:{ family:'DM Mono', size:10 } }, grid:{ color:'#2a3348' } },
-    y: { ticks: { color:'#535e72', font:{ family:'DM Mono', size:10 } }, grid:{ color:'#2a3348' } }
+    x: { ticks: { color:'#8a97aa', font:{ family:'DM Mono', size:10 } }, grid:{ color:'#dde3ec' } },
+    y: { ticks: { color:'#8a97aa', font:{ family:'DM Mono', size:10 } }, grid:{ color:'#dde3ec' } }
   }
 };
 function lineChart(labels, data, label, color, reverse) {
