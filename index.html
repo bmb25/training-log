@@ -344,8 +344,64 @@ select option { background: var(--surface2); }
 .gap-10 { display: flex; gap: 10px; }
 .flex-end { justify-content: flex-end; }
 .section-title { font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono); }
-.empty-state { text-align: center; padding: 48px 24px; color: var(--text3); }
-.empty-icon { font-size: 36px; margin-bottom: 12px; }
+.exercise-picker {
+  position: relative;
+  display: inline-block;
+}
+.exercise-picker-dropdown {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-width: 260px;
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 50;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+.exercise-picker-dropdown.hidden { display: none; }
+.picker-section-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 10px 14px 4px;
+  font-family: var(--font-mono);
+}
+.picker-item {
+  padding: 9px 14px;
+  font-size: 13px;
+  color: var(--text2);
+  cursor: pointer;
+  transition: background 0.1s;
+  border-bottom: 1px solid var(--border);
+}
+.picker-item:last-child { border-bottom: none; }
+.picker-item:hover { background: var(--surface2); color: var(--text); }
+.picker-custom-input {
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+}
+.picker-custom-input input {
+  font-size: 13px;
+  padding: 7px 10px;
+}
+.contrast-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(245,166,35,0.15);
+  color: var(--accent3);
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.04em;
+}
 
 /* ── SEARCH / FILTER ── */
 .search-bar { position: relative; margin-bottom: 14px; }
@@ -514,13 +570,23 @@ select option { background: var(--surface2); }
         <!-- WEIGHTS -->
         <div class="session-fields" id="weights-fields">
           <div class="section-title">Weights details</div>
-          <div class="form-group" style="margin-bottom:16px;">
-            <label>Session type</label>
-            <select id="f-wt-type"><option>Session A (strength)</option><option>Session B (power / contrast)</option><option>Other</option></select>
+          <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap;">
+            <div class="form-group" style="flex:1;min-width:180px;">
+              <label>Session type</label>
+              <select id="f-wt-type" onchange="autoPopulateExercises()">
+                <option>Session A (strength)</option>
+                <option>Session B (power / contrast)</option>
+                <option>Wednesday club (moderate)</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="autoPopulateExercises()" style="white-space:nowrap;margin-bottom:1px;">↺ Auto-fill exercises</button>
           </div>
           <div class="section-title">Exercises</div>
           <div id="exercise-list"></div>
-          <button class="btn btn-secondary btn-sm" onclick="addExercise()" style="margin-top:4px;">+ Add exercise</button>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="addExerciseWithPicker()">+ Add exercise</button>
+          </div>
         </div>
 
         <div class="form-group full mt-20">
@@ -824,17 +890,141 @@ function setType(type) {
   document.getElementById('type-weights').classList.toggle('active', type === 'weights');
   document.getElementById('rowing-fields').classList.toggle('visible', type === 'rowing');
   document.getElementById('weights-fields').classList.toggle('visible', type === 'weights');
-  if (type === 'weights' && document.getElementById('exercise-list').children.length === 0) addExercise();
+  if (type === 'weights' && document.getElementById('exercise-list').children.length === 0) {
+    autoPopulateExercises();
+  }
 }
 
-function addExercise() {
+// ── EXERCISE LIBRARY ─────────────────────────────────────────────────────────
+const SESSION_EXERCISES = {
+  'Session A (strength)': [
+    { name: 'Trap bar deadlift', note: '3s eccentric. Primary force-production exercise.' },
+    { name: 'Bench row (chest-supported)', note: 'Full retraction. Controls the catch position.' },
+    { name: 'Goblet squat', note: '2s pause at bottom. Upright torso.' },
+    { name: 'Weighted pull-up / lat pulldown', note: 'Full hang, drive elbows down.' },
+    { name: 'Pallof press', note: 'Anti-rotation core. Non-negotiable.' },
+    { name: 'Romanian deadlift', note: 'Hamstring load, injury prevention.' },
+  ],
+  'Session B (power / contrast)': [
+    { name: 'Hang clean / KB swing', note: 'PAP stimulus — maximum explosive intent.', contrast: true },
+    { name: 'Box jump', note: 'Immediately after hang clean. No rest between.', contrast: true },
+    { name: 'Single-leg press', note: '2s eccentric, explosive concentric.' },
+    { name: 'Cable seated row (explosive)', note: 'Fast pull. Mimics race-pace arm draw.' },
+    { name: 'Farmer\'s carry', note: 'Grip and trunk stability.' },
+    { name: 'Dead bug', note: 'Deep core — force transfer system.' },
+  ],
+  'Wednesday club (moderate)': [
+    { name: 'KB swing / hang clean (light)', note: 'Keep explosive intent, light load.' },
+    { name: 'Bench row (chest-supported)', note: 'Moderate load.' },
+    { name: 'Single-leg press', note: '3×10 each side.' },
+    { name: 'Dead bug', note: '3×10 each side.' },
+    { name: 'Pallof press', note: '2×10 each side.' },
+  ],
+};
+
+const ALL_EXERCISES = [
+  'Trap bar deadlift', 'Bench row (chest-supported)', 'Goblet squat',
+  'Weighted pull-up / lat pulldown', 'Pallof press', 'Romanian deadlift',
+  'Hang clean / KB swing', 'Box jump', 'Single-leg press',
+  'Cable seated row (explosive)', 'Farmer\'s carry', 'Dead bug',
+  'KB swing / hang clean (light)', 'Barbell row',
+];
+
+function autoPopulateExercises() {
+  const sessionType = document.getElementById('f-wt-type').value;
+  const exercises = SESSION_EXERCISES[sessionType];
+  if (!exercises) return;
+  // Clear existing
+  exerciseCount = 0; setCounters = {};
+  document.getElementById('exercise-list').innerHTML = '';
+  // Add each exercise from the session template
+  exercises.forEach(ex => addExercise(ex.name, ex.note, ex.contrast));
+}
+
+function addExerciseWithPicker() {
+  // Show a picker dropdown then add the chosen exercise
+  const existing = document.getElementById('exercise-picker-popup');
+  if (existing) { existing.remove(); return; }
+
+  // Build previously used exercise names from session history
+  const usedNames = [...new Set(
+    sessions.filter(s => s.type === 'weights' && s.exercises)
+      .flatMap(s => s.exercises.map(e => e.name))
+  )].filter(n => !ALL_EXERCISES.includes(n));
+
+  let html = `<div class="exercise-picker-dropdown" id="exercise-picker-popup">`;
+
+  // Session-specific exercises based on current selection
+  const sessionType = document.getElementById('f-wt-type').value;
+  const sessionExs = SESSION_EXERCISES[sessionType];
+  if (sessionExs) {
+    html += `<div class="picker-section-label">${sessionType.split('(')[0].trim()}</div>`;
+    sessionExs.forEach(ex => {
+      html += `<div class="picker-item" onclick="addExercise('${ex.name.replace(/'/g,"\\'")}','${(ex.note||'').replace(/'/g,"\\'")}',${ex.contrast||false});closePicker()">
+        ${ex.name}${ex.contrast ? '<span class="contrast-badge">PAP</span>' : ''}
+      </div>`;
+    });
+  }
+
+  // All exercises not already in current session
+  const currentNames = Array.from(document.querySelectorAll('.exercise-name-input')).map(el => el.value);
+  const otherExs = ALL_EXERCISES.filter(n => !sessionExs?.find(e => e.name === n) && !currentNames.includes(n));
+  if (otherExs.length) {
+    html += `<div class="picker-section-label">All exercises</div>`;
+    otherExs.forEach(n => {
+      html += `<div class="picker-item" onclick="addExercise('${n.replace(/'/g,"\\'")}');closePicker()">${n}</div>`;
+    });
+  }
+
+  // Previously used custom exercises
+  if (usedNames.length) {
+    html += `<div class="picker-section-label">Previously used</div>`;
+    usedNames.forEach(n => {
+      html += `<div class="picker-item" onclick="addExercise('${n.replace(/'/g,"\\'")}');closePicker()">${n}</div>`;
+    });
+  }
+
+  // Custom entry
+  html += `<div class="picker-custom-input">
+    <input type="text" id="picker-custom" placeholder="Type custom exercise name..." onkeydown="if(event.key==='Enter'){addExercise(this.value);closePicker();}">
+  </div></div>`;
+
+  // Insert after the add button
+  const btn = document.querySelector('[onclick="addExerciseWithPicker()"]');
+  btn.insertAdjacentHTML('afterend', html);
+  document.getElementById('picker-custom').focus();
+
+  // Close on outside click
+  setTimeout(() => {
+    document.addEventListener('click', function handler(e) {
+      if (!document.getElementById('exercise-picker-popup')?.contains(e.target) && !btn.contains(e.target)) {
+        closePicker();
+        document.removeEventListener('click', handler);
+      }
+    });
+  }, 100);
+}
+
+function closePicker() {
+  document.getElementById('exercise-picker-popup')?.remove();
+}
+
+function addExercise(name = '', note = '', isContrast = false) {
   exerciseCount++;
   const i = exerciseCount;
   const div = document.createElement('div');
   div.className = 'exercise-row'; div.id = 'ex-' + i;
+  const contrastBadge = isContrast ? '<span class="contrast-badge">PAP contrast</span>' : '';
   div.innerHTML = `
     <div class="exercise-row-header">
-      <input class="exercise-name-input" type="text" placeholder="Exercise name" id="ex-name-${i}">
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:500;color:var(--text)">${name || 'Exercise'}</span>
+          ${contrastBadge}
+          <button class="btn btn-secondary btn-sm" onclick="renameExercise(${i})" style="padding:2px 8px;font-size:11px;">rename</button>
+        </div>
+        <input type="hidden" id="ex-name-${i}" value="${name}">
+      </div>
       <button class="btn btn-danger btn-sm" onclick="document.getElementById('ex-${i}').remove()">✕</button>
     </div>
     <div style="display:grid;grid-template-columns:28px 1fr 1fr 1fr auto;gap:8px;margin-bottom:6px;">
@@ -845,10 +1035,23 @@ function addExercise() {
     <button class="btn btn-secondary btn-sm" onclick="addSet(${i})" style="margin-top:4px;">+ Set</button>
     <div class="form-group" style="margin-top:10px;">
       <label>Technique notes</label>
-      <input type="text" id="ex-note-${i}" placeholder="Observations for this exercise">
+      <input type="text" id="ex-note-${i}" placeholder="${note || 'Observations for this exercise'}" value="">
     </div>`;
   document.getElementById('exercise-list').appendChild(div);
   addSet(i);
+}
+
+function renameExercise(i) {
+  const hidden = document.getElementById('ex-name-' + i);
+  const current = hidden.value;
+  const newName = prompt('Rename exercise:', current);
+  if (newName && newName.trim()) {
+    hidden.value = newName.trim();
+    // Update the display label
+    const row = document.getElementById('ex-' + i);
+    const label = row.querySelector('span[style*="font-weight:500"]');
+    if (label) label.textContent = newName.trim();
+  }
 }
 
 function addSet(exId) {
